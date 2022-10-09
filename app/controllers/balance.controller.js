@@ -1,11 +1,19 @@
+require("dotenv").config();
 const User = require("../models/User");
 const db = require("../config/db");
 
 exports.findOne = async (req, res) => {
   const my_id = req.params.id;
+  const currency = req.params.currency;
   const user = await User.findOne({ my_id: +my_id });
+
   if (user) {
-    res.json({ balance: user.balance });
+    if (currency) {
+      const balance_convert = await getCurr(currency, user.balance);
+      res.json({ balance: balance_convert.result });
+    } else {
+      res.json({ balance: user.balance });
+    }
   } else {
     res.json({ message: "User not found" });
   }
@@ -61,6 +69,32 @@ exports.transfer = async (req, res) => {
     res.json(error.message);
   }
 };
+
+async function getCurr(to, amount) {
+  const myHeaders = new Headers();
+  myHeaders.append("apikey", process.env.CurrApiKey);
+
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow",
+    headers: myHeaders,
+  };
+
+  const from = "USD";
+
+  const response = await fetch(
+    `https://api.apilayer.com/currency_data/convert?to=${to}&from=${from}&amount=${amount}`,
+    requestOptions
+  );
+  const result = await response.text();
+
+  return JSON.parse(result);
+  // .then((response) => response.text())
+  // .then((result) => {
+  //   return result;
+  // })
+  // .catch((error) => console.log("error", error));
+}
 
 // async function operation(id, value, type){
 //   try {

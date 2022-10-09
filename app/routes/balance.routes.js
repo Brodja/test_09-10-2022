@@ -4,7 +4,7 @@ module.exports = app => {
     const router = require("express").Router();
 
     //get balance by id
-    router.get("/:id", balance.findOne);
+    router.get("/:id/:currency?", balance.findOne);
     
     //+/- from balance
     router.post("/balance_change", balance.change) 
