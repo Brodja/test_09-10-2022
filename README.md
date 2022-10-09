@@ -15,23 +15,27 @@ http://localhost:5000/api/balance/1/UAH
 
 Операция с балансом пользователя: 
 http://localhost:5000/api/balance/balance_change
+```javascript
 {
     "id": 1,
     "value": 10,
     "income": true
 }
+```
 id - ид юзера
 value - сумма операции
 income - true/false - прибавать/отнять
 
 Перевод с баланса  на баланс:
 http://localhost:5000/api/balance/transfer
+```javascript
 {
     "id_from": 1,
     "id_to": 3,
     "value": 2,
     "description": "dassadsdadsads"
 }
+```
 id_from - ид с какого юзера
 id_to - ид которому юзеру
 value - сумма
@@ -39,6 +43,7 @@ description - описание перевода
 
 История операций по ид юзера:
 http://localhost:5000/api/story/1
+```javascript
 [
     {
         "result": "To my balance from user with id 3",
@@ -53,6 +58,7 @@ http://localhost:5000/api/story/1
         "date": "2022-10-09T16:27:29.979Z"
     }
 ]
+```
 result - логический вывод
 value - сумма
 description - описание
