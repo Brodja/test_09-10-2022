@@ -1,13 +1,15 @@
 const mongoose = require("mongoose");
 
-const OperationsLogSchema = new mongoose.Schema({
+const StorySchema = new mongoose.Schema({
   id_from: {
-    type: mongoose.Schema.User.ObjectId,
-    required: true,
+    type: Number,
+    required: false,
+    default: 0
   },
   id_to: {
-    type: mongoose.Schema.User.ObjectId,
-    required: true,
+    type: Number, 
+    required: false,
+    default: 0
   },
   value: {
     type: Number,
@@ -23,4 +25,4 @@ const OperationsLogSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('OperationsLog', OperationsLogSchema);
+module.exports = mongoose.model('Story', StorySchema);

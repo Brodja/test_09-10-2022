@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 
 require("./app/routes/balance.routes")(app);
+require("./app/routes/story.routes")(app);
 
 const start = async () => {
   try {

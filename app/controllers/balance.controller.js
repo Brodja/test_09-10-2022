@@ -1,5 +1,7 @@
 require("dotenv").config();
 const User = require("../models/User");
+const Story = require("../models/Story");
+const mongoose = require("mongoose");
 const db = require("../config/db");
 
 exports.findOne = async (req, res) => {
@@ -31,6 +33,14 @@ exports.change = async (req, res) => {
       } else {
         const newBalance = income ? user.balance + value : user.balance - value;
         await User.findOneAndUpdate({ my_id: +id }, { balance: newBalance });
+       
+        const Log = {
+          id_from: !income ? user.my_id : "",
+          id_to: income ? user.my_id : "",
+          value,
+          description: "Simple operation"
+        }
+        await Story.create(Log);
       }
     }
     res.json("success");
@@ -61,6 +71,13 @@ exports.transfer = async (req, res) => {
           { my_id: +id_to },
           { balance: newBalanceTo }
         );
+        const Log = {
+          id_from: user_from.my_id,
+          id_to: user_to.my_id,
+          value,
+          description
+        }
+        await Story.create(Log);
       }
     }
     res.json("success");
