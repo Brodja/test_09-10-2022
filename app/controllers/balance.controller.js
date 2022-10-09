@@ -12,26 +12,23 @@ exports.findOne = async (req, res) => {
 };
 
 exports.change = async (req, res) => {
-  const { id, value, type } = req.body;
+  const { id, value, income } = req.body;
   try {
     const user = await User.findOne({ my_id: +id });
     if (!user) {
-      throw new Error('User not found!');
+      throw new Error("User not found!");
     } else {
-      if (type === "-" && user.balance < value) {
-        throw new Error('Insufficient funds!');
+      if (!income && user.balance < value) {
+        throw new Error("Insufficient funds!");
       } else {
-        const newBalance = type === "+" ? user.balance + value : user.balance - value;
-        await User.findOneAndUpdate(
-          { my_id: +id },
-          { balance: newBalance }
-        )
+        const newBalance = income ? user.balance + value : user.balance - value;
+        await User.findOneAndUpdate({ my_id: +id }, { balance: newBalance });
       }
     }
-    res.send('ok')
+    res.json("success");
   } catch (error) {
     console.log(error);
-    res.send(error.message)
+    res.json(error.message);
   }
 };
 
@@ -40,22 +37,53 @@ exports.transfer = async (req, res) => {
   try {
     const user_from = await User.findOne({ my_id: +id_from });
     const user_to = await User.findOne({ my_id: +id_to });
-    if(!user_from && !user_to){
-      throw new Error('User not found!');
+    if (!user_from && !user_to) {
+      throw new Error("User not found!");
     } else {
-
+      if (user_from.balance < value) {
+        throw new Error("Insufficient funds!");
+      } else {
+        const newBalanceFrom = user_from.balance - value;
+        const newBalanceTo = user_to.balance + value;
+        await User.findOneAndUpdate(
+          { my_id: +id_from },
+          { balance: newBalanceFrom }
+        );
+        await User.findOneAndUpdate(
+          { my_id: +id_to },
+          { balance: newBalanceTo }
+        );
+      }
     }
-    
+    res.json("success");
   } catch (error) {
     console.log(error);
-    res.send(error.message)
+    res.json(error.message);
   }
 };
 
-function operation(id, value, type){
-
-}
-
+// async function operation(id, value, type){
+//   try {
+//     const user = await User.findOne({ my_id: +id });
+//     if (!user) {
+//       throw new Error('User not found!');
+//     } else {
+//       if (type === "-" && user.balance < value) {
+//         throw new Error('Insufficient funds!');
+//       } else {
+//         const newBalance = type === "+" ? user.balance + value : user.balance - value;
+//         await User.findOneAndUpdate(
+//           { my_id: +id },
+//           { balance: newBalance }
+//         )
+//       }
+//     }
+//     return 'ok';
+//   } catch (error) {
+//     console.log('1', error);
+//     return error.message
+//   }
+// }
 
 // exports.change = async (req, res) => {
 //   const { id, value, type } = req.body;
@@ -87,5 +115,5 @@ function operation(id, value, type){
 //   } finally {
 //     // session.endSession();
 //   }
-  
+
 // };
