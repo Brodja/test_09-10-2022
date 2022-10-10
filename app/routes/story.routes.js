@@ -3,7 +3,7 @@ module.exports = app => {
   
     const router = require("express").Router();
 
-    router.get("/:id", story.getStory);
+    router.get("/:id/:page?/:limit?/:sort?", story.getStory);
    
     app.use('/api/story', router);
   };

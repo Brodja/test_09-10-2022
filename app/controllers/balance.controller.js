@@ -78,7 +78,7 @@ exports.transfer = async (req, res) => {
   if (
     typeof value !== "number" ||
     value < 0 ||
-    typeof income !== "boolean" ||
+    typeof description !== "string" ||
     typeof id_from !== "number" ||
     id_from < 1 ||
     typeof id_to !== "number" ||
